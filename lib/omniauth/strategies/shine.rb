@@ -23,7 +23,6 @@ module OmniAuth
       extra do { :raw_info => raw_info } end
 
       def request_phase
-log :info, "REQUEST PHASE: #{callback_url}"
         options[:authorize_params] = client_params.merge(options[:authorize_params])
         super
       end
@@ -41,18 +40,10 @@ log :info, "REQUEST PHASE: #{callback_url}"
         options[:callback_url] || (full_host + script_name + callback_path)
       end
 
-      def build_access_token
-        log :info, "BUILD_ACCESS_TOKEN: #{callback_url}"
-        super
-      end
-
       private
 
       def client_params
-log :info, "CLIENT PARAMS"
-        p = {:client_id => options[:client_id], :redirect_uri => callback_url ,:response_type => "code", :scope => DEFAULT_SCOPE}
-log :info, p[:redirect_uri] 
-        p
+        {:client_id => options[:client_id], :redirect_uri => callback_url ,:response_type => "code", :scope => DEFAULT_SCOPE}
       end
     end
   end
