@@ -1,4 +1,5 @@
 require 'omniauth-oauth2'
+require 'httparty'
 
 module OmniAuth
   module Strategies
@@ -17,7 +18,7 @@ module OmniAuth
 
 
       # uid { raw_info['userId'] }
-      uid { '12345' }
+      uid { raw_info['userId'] }
       # info do { :firstDate => (raw_info['profile'] || {})['firstDate'] } end
       info do { :foo => 'fee' } end
       extra do { :raw_info => raw_info } end
@@ -32,8 +33,11 @@ module OmniAuth
       end
 
       def raw_info
+        puts "entering raw_info"
+        puts "access_token.token", access_token.token
+        @raw_info ||= MultiJson.load(access_token.get('https://api.misfitwearables.com/move/resource/v1/user/me/profile').body)
         # @raw_info ||= access_token.get('https://api.misfitwearables.com/move/v1/user/me/profile').parsed
-        @raw_info
+        #@raw_info
       end
 
       def callback_url
